@@ -17,7 +17,7 @@ public class Main {
     private static final char[] LOWERCASE_LETTERS = new char[]{'a', 'b', 'c', 'd', 'e', 'g', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'w', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z'};
     private static final char[] SYMBOL = new char[]{'^', '=', '.', '*', '#', '>', '@', '!', '?', '+', ':', '}', ')', ']', '-', ',', '~'};
 
-    //
+
     private static final Random RANDOM = new Random();
 
     public static void main(String[] args) {
@@ -38,7 +38,7 @@ public class Main {
 
         // 设置布局
         FlowLayout fl = new FlowLayout();
-        jf.setLayout(fl);  //给窗体设置为流式布局——从左到右然后从上到下排列自己写的组件顺序
+        jf.setLayout(fl);
 
         // 密码长度的标题及文本框
         JLabel pwLengthLabel = new JLabel("输入密码长度（8 ~ 100）");
@@ -62,13 +62,13 @@ public class Main {
         randomPassword.setHorizontalAlignment(JTextField.CENTER);
         jf.add(randomPassword);
 
-        // 生成按钮
+        // 按钮
         JButton generateBtn = new JButton("生成");
         jf.add(generateBtn);
-        // 复制按钮
         JButton copyBtn = new JButton("复制");
         jf.add(copyBtn);
 
+        // 生成按按钮监听事件，点击之后便会触发
         generateBtn.addActionListener(click -> {
             try {
                 int pwLength = Integer.parseInt(pwLengthTextField.getText());
@@ -84,11 +84,12 @@ public class Main {
             }
         });
 
+        // 『复制』按钮监听事件
         copyBtn.addActionListener(click -> {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(randomPassword.getText()), null);
         });
 
-        // 窗口可见
+        // 使窗口可见
         jf.setVisible(true);
     }
 
@@ -103,8 +104,8 @@ public class Main {
      */
     public static String generatePassword(boolean isUppercase, boolean isNumber, boolean isSymbol, int length) {
         //
-        char[] AVAILABLE = new char[0];
-        int oldLength = AVAILABLE.length;
+        char[] AVAILABLE;
+        int oldLength;
         // 数组扩容
         AVAILABLE = Arrays.copyOf(LOWERCASE_LETTERS, LOWERCASE_LETTERS.length);
         // 拷贝数组
@@ -112,17 +113,17 @@ public class Main {
 
         if (isUppercase) {
             oldLength = AVAILABLE.length;
-            AVAILABLE = Arrays.copyOf(AVAILABLE, UPPERCASE_LETTERS.length + AVAILABLE.length);
+            AVAILABLE = Arrays.copyOf(AVAILABLE, UPPERCASE_LETTERS.length + oldLength);
             System.arraycopy(UPPERCASE_LETTERS, 0, AVAILABLE, oldLength, UPPERCASE_LETTERS.length);
         }
         if (isNumber) {
             oldLength = AVAILABLE.length;
-            AVAILABLE = Arrays.copyOf(AVAILABLE, NUMBER.length + AVAILABLE.length);
+            AVAILABLE = Arrays.copyOf(AVAILABLE, NUMBER.length + oldLength);
             System.arraycopy(NUMBER, 0, AVAILABLE, oldLength, NUMBER.length);
         }
         if (isSymbol) {
             oldLength = AVAILABLE.length;
-            AVAILABLE = Arrays.copyOf(AVAILABLE, SYMBOL.length + AVAILABLE.length);
+            AVAILABLE = Arrays.copyOf(AVAILABLE, SYMBOL.length + oldLength);
             System.arraycopy(SYMBOL, 0, AVAILABLE, oldLength, SYMBOL.length);
         }
 
@@ -133,22 +134,4 @@ public class Main {
         }
         return sb.toString();
     }
-
-/*    public static void triggerGenerationBtn(JButton generateBtn, JTextField randomPassword, JCheckBox uppercaseLetter,
-                                            JCheckBox number, JCheckBox symbol, JTextField pwLengthTextField) {
-        generateBtn.addActionListener(click -> {
-            try {
-                int pwLength = Integer.parseInt(pwLengthTextField.getText());
-                if (pwLength >= 8 && pwLength <= 100) {
-                    randomPassword.setText(generatePassword(uppercaseLetter.isSelected(), number.isSelected(), symbol.isSelected(), pwLength));
-                } else {
-                    randomPassword.setText("请输入长度为 8 ~100 的数字!");
-                    pwLengthTextField.setText("");
-                }
-            } catch (NumberFormatException ex) {
-                randomPassword.setText("请输入数字!");
-                pwLengthTextField.setText("");
-            }
-        });
-    }*/
 }
